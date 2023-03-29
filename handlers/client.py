@@ -1,6 +1,7 @@
 from aiogram import Dispatcher, types
 from config import bot
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+from parser.products import get_data_from_page
 
 
 async def start_command(message: types.Message):
@@ -39,6 +40,17 @@ async def quiz_1(message: types.Message):
     )
 
 
+async def get_products(message: types.Message):
+    products = get_data_from_page()
+    for product in products:
+        await message.answer(
+            f"{product['link']}\n"
+            f"{product['title']}\n"
+            f"{product['price']}"
+        )
+
+
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(quiz_1, commands=['quiz'])
     dp.register_message_handler(start_command, commands=['start'])
+    dp.register_message_handler(get_products, commands=['get'])
